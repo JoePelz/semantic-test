@@ -1,0 +1,6 @@
+node_modules/
+.idea/
+semantic/dist/
+semantic/tasks/
+semantic/src/definitions/
+semantic/src/themes/
