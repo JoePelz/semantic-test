@@ -1,3 +1,13 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+@background: #ccd6e0;
+@invertedBorderSize: 0;
+
+@trueWhite     : #FFFFFF;
+@trueBlack     : #000000;
+
+@blue_hover    : tint(@blue, 20%);
+@blue_active   : tint(@blue, 75%);
+@blue_both     : tint(@blue, 90%);

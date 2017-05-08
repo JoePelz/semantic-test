@@ -1,3 +1,10 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+@toggleLaneBackground: tint(@primaryColor, 90%); /* off, !focus */
+@toggleFocusColor: tint(@primaryColor, 80%); /* off, focus */
+@toggleOnLaneColor: tint(@primaryColor, 30%); /* on, !focus */
+@toggleOnFocusLaneColor: tint(@primaryColor, 20%); /* on focus */
+
+@handleBackground: tint(@blue, 75%) linear-gradient(transparent, @veryStrongTransparentBlack);

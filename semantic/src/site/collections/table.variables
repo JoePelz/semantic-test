@@ -1,3 +1,5 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+@stripedBackground: rgba(0, 0, 50, 0.05);
