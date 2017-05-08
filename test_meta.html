@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <title>Test Site</title>
+  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="test_general.css">
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script src="semantic/dist/semantic.min.js"></script>
+</head>
+<body>
+<div class="ui inverted main menu" id="navbar">
+    <div class="header item">
+        <a href="/"><img class="logo ui middle aligned spaced image" src="/static/img/logo_light.png" width="32px" height="32px">Systems Architecture Mapper</a>
+    </div>
+    <a class="item " href="/demo/map">
+        <i class="sitemap icon"></i>
+        Map
+    </a>
+
+    <a class="item " href="/demo/table">
+        <i class="table icon"></i>
+        Table View
+    </a>
+
+    <a class="item active" href="/demo/metadata">
+        <i class="tasks icon"></i>
+        Host Details
+    </a>
+
+    <a class="item " href="/demo/stats">
+        <i class="filter icon"></i>
+        Stats
+    </a>
+
+    <a class="item " href="/demo/settings_page">
+        <i class="settings icon"></i>
+        Settings
+    </a>
+
+    <!-- Support Menu -->
+    <div id="support_menu" class="ui dropdown item" tabindex="0">
+        Support
+        <i class="dropdown icon"></i>
+        <div class="ui menu" tabindex="-1">
+            <!--<div class="header">unclickable header text</div>-->
+            <a class="icon  item" href="/about"><i class="info icon"></i>About SAM</a>
+            <a class="icon  item" href="/starting"><i class="help icon"></i>Getting Started</a>
+        </div>
+    </div>
+
+    <!-- login menu -->
+</div>
+<script>
+  var g_known_tags = [];
+  var g_known_envs = [];
+  g_known_envs.push("production");
+
+  g_known_envs.push("inherit");
+
+  g_known_envs.push("dev");
+
+  g_ds = "ds1";
+</script>
+<style type="text/css">
+.ui.tab.segment {
+  min-height: 30em;
+  margin-bottom: 2em;
+}
+div.ui.message.transition {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+</style>
+<div class="ui container">
+  <h3 class="ui center aligned header">
+    <div id="hostSearch" class="ui icon input">
+      <input placeholder="Search IP (1.2.3.4/5)" type="text">
+      <i class="circular search link icon"></i>
+    </div>
+  </h3>
+  <div class="ui floating labeled right icon dropdown button" tabindex="0">
+    <i class="cubes icon"></i>
+    <span class="text">default</span>
+    <div class="menu" tabindex="-1">
+      <div class="item active selected" data-value="ds1">default</div>
+    </div>
+  </div>
+<!--
+----------------- Quick Info -----------------
+-->
+  <table class="ui celled striped structured table">
+    <thead>
+      <tr><th colspan="2">
+        <h3>Quick Info</h3>
+      </th></tr>
+    </thead>
+    <tbody id="quickinfo"><tr><td>IPv4 address / subnet</td><td>21.0.0.0/8</td></tr><tr><td>Name</td><td><div class="ui transparent left icon input"><input placeholder="-" data-content="" type="text"><i class="write icon"></i></div></td></tr><tr><td>Tags</td><td><div class="ui multiple search selection dropdown"><input name="tags" type="hidden"><i class="dropdown icon"></i><input class="search" autocomplete="off" tabindex="0"><span class="sizer"></span><div class="default text">tags</div><div class="menu" tabindex="-1"></div></div></td></tr><tr><td>Environment</td><td><div class="ui search selection dropdown"><input name="env" value="inherit" type="hidden"><i class="dropdown icon"></i><input class="search" autocomplete="off" tabindex="0"><div class="text">inherit (production)</div><div class="menu" tabindex="-1"><div class="item" data-value="production">production</div><div class="item active selected" data-value="inherit">inherit (production)</div><div class="item" data-value="dev">dev</div></div></div></td></tr><tr><td>Role (0 = client, 1 = server)</td><td>0.51 (mixed client/server)</td></tr><tr><td>Protocols used</td><td>UDP (i/o), TCP (i/o), IPV6 (i/o), ICMP (i/o)</td></tr><tr><td>Local ports accessed</td><td>20371</td></tr><tr><td>Endpoints represented</td><td>1179 (of 16777216 possible)</td></tr><tr><td>Average Total bps (approx)</td><td>327.58 KiB/s</td></tr></tbody>
+  </table>
+  <div class="ui two column divided stackable grid">
+    <div class="row">
+      <div class="column">
+        <div id="in_col" class="ui segment"><h3 class="ui centered header">Inbound Connections</h3><table class="ui celled striped structured table"><tr><td>Unique source IPs</td><td>13418</td></tr><tr><td>Unique connections (src, dest, port)</td><td>41339</td></tr><tr><td>Total Connections recorded</td><td>183994 over 60 minutes</td></tr><tr><td>Connections per second</td><td>51.109</td></tr><tr><td>Bytes Sent</td><td>438 MB</td></tr><tr><td>Bytes Received</td><td>116 MB</td></tr><tr><td>Avg Connection bps</td><td>3.69 B/s</td></tr><tr><td>Max Connection bps</td><td>5.20 KiB/s</td></tr><tr><td>Packets Send Rate</td><td>1.97 Kp/s</td></tr><tr><td>Packets Receive Rate</td><td>672.60 p/s</td></tr><tr><td>Avg Connection Duration</td><td>14 minutes</td></tr></table></div>
+      </div>
+      <div class="column">
+        <div id="out_col" class="ui segment"><h3 class="ui centered header">Outbound Connections</h3><table class="ui celled striped structured table"><tr><td>Unique destination IPs</td><td>3494</td></tr><tr><td>Unique connections (src, dest, port)</td><td>53018</td></tr><tr><td>Total Connections recorded</td><td>174996 over 60 minutes</td></tr><tr><td>Connections per second</td><td>48.610</td></tr><tr><td>Bytes Sent</td><td>547 MB</td></tr><tr><td>Bytes Received</td><td>51 MB</td></tr><tr><td>Avg Connection Bps</td><td>3.97 B/s</td></tr><tr><td>Max Connection Bps</td><td>7.35 KiB/s</td></tr><tr><td>Packet Send Rate</td><td>3.13 Kp/s</td></tr><tr><td>Packet Receive Rate</td><td>515.87 p/s</td></tr><tr><td>Avg Connection Duration</td><td>15 minutes</td></tr></table></div>
+      </div>
+    </div>
+  </div>
+<!--
+----------------- Tab Headers-----------------
+-->
+  <div class="ui pointing secondary menu">
+    <a class="item" data-tab="inputs">Unique Inputs</a>
+    <a class="item active" data-tab="outputs">Unique Outputs</a>
+    <a class="item" data-tab="ports">Local Ports</a>
+    <a class="item" data-tab="children">Child Nodes</a>
+  </div>
+<!--
+----------------- TAB: inputs -----------------
+-->
+  <div class="ui tab segment" data-tab="inputs" id="tab-input">
+    <div id="in_pagination"><button class="ui button disabled">prev</button><span>Showing 1-50 of 41339</span><button class="ui button">next</button></div>
+    <table class="ui very compact sortable celled structured table">
+        <thead>
+          <tr id="conn_in_h"><th data-value="src">Source IP</th><th data-value="dst">Dest. IP</th><th data-value="port">Dest. Port</th><th data-value="links" class="sorted descending">Count / min</th><th data-value="sum_bytes">Sum Bytes</th><th data-value="sum_packets">Sum Packets</th><th data-value="avg_duration">Avg Duration</th></tr>
+        </thead>
+        <tbody id="conn_in"><tr><td>189.157.60.26</td><td>21.66.121.72</td><td><a data-content="Domain Name Server" class="popup">53 - domain</a></td><td>113.07</td><td>540 KB</td><td>6219</td><td>30 seconds</td></tr><tr><td>189.157.60.26</td><td>21.66.237.72</td><td><a data-content="Domain Name Server" class="popup">53 - domain</a></td><td>111.09</td><td>529 KB</td><td>6110</td><td>30 seconds</td></tr><tr><td>21.66.36.213</td><td>21.66.10.70</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>23.47</td><td>1383 KB</td><td>10704</td><td>61 minutes</td></tr><tr><td>21.66.36.104</td><td>21.66.10.70</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>23.27</td><td>1393 KB</td><td>10770</td><td>61 minutes</td></tr><tr><td>21.66.174.236</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>17.44</td><td>286 KB</td><td>988</td><td>30 minutes</td></tr><tr><td>21.66.33.86</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>16.25</td><td>229 KB</td><td>904</td><td>30 minutes</td></tr><tr><td>21.66.145.134</td><td>21.66.10.44</td><td><a data-content="Domain Name Server" class="popup">53 - domain</a></td><td>13.11</td><td>379 KB</td><td>5167</td><td>60 minutes</td></tr><tr><td>79.179.154.180</td><td>21.66.10.140</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>12.84</td><td>48 KB</td><td>1521</td><td>9 minutes</td></tr><tr><td>79.179.154.180</td><td>21.66.10.70</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>12.80</td><td>48 KB</td><td>1516</td><td>9 minutes</td></tr><tr><td>79.179.154.180</td><td>21.66.10.14</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>12.78</td><td>48 KB</td><td>1515</td><td>9 minutes</td></tr><tr><td>79.179.154.180</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>12.69</td><td>47 KB</td><td>1505</td><td>9 minutes</td></tr><tr><td>79.179.225.180</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>12.11</td><td>392 KB</td><td>4665</td><td>60 minutes</td></tr><tr><td>21.66.212.6</td><td>21.66.10.70</td><td><a data-content="Kerberos" class="popup">88 - kerberos</a></td><td>9.85</td><td>263 KB</td><td>2168</td><td>60 minutes</td></tr><tr><td>110.145.189.156</td><td>21.66.10.185</td><td><a data-content="World Wide Web HTTP" class="popup">80 - http</a></td><td>7.91</td><td>291 KB</td><td>2610</td><td>60 minutes</td></tr><tr><td>189.157.128.191</td><td>21.66.121.72</td><td><a data-content="Domain Name Server" class="popup">53 - domain</a></td><td>7.25</td><td>33 KB</td><td>399</td><td>30 seconds</td></tr><tr><td>79.179.154.140</td><td>21.66.10.14</td><td><a data-content="ldap protocol over TLS/SSL (was sldap)" class="popup">636 - ldaps</a></td><td>6.67</td><td>25 KB</td><td>802</td><td>11 minutes</td></tr><tr><td>79.179.154.140</td><td>21.66.10.140</td><td><a data-content="ldap protocol over TLS/SSL (was sldap)" class="popup">636 - ldaps</a></td><td>6.62</td><td>25 KB</td><td>798</td><td>12 minutes</td></tr><tr><td>79.179.154.180</td><td>21.66.10.70</td><td><a data-content="ldap protocol over TLS/SSL (was sldap)" class="popup">636 - ldaps</a></td><td>6.62</td><td>25 KB</td><td>797</td><td>11 minutes</td></tr><tr><td>79.179.154.140</td><td>21.66.10.70</td><td><a data-content="ldap protocol over TLS/SSL (was sldap)" class="popup">636 - ldaps</a></td><td>6.47</td><td>24 KB</td><td>772</td><td>10 minutes</td></tr><tr><td>79.179.154.180</td><td>21.66.10.140</td><td><a data-content="ldap protocol over TLS/SSL (was sldap)" class="popup">636 - ldaps</a></td><td>6.40</td><td>24 KB</td><td>764</td><td>10 minutes</td></tr><tr><td>79.179.154.180</td><td>21.66.10.14</td><td><a data-content="ldap protocol over TLS/SSL (was sldap)" class="popup">636 - ldaps</a></td><td>6.36</td><td>24 KB</td><td>763</td><td>11 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.182</td><td><a>9003</a></td><td>5.98</td><td>882 KB</td><td>9081</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.182</td><td><a data-content="DynamID authentication" class="popup">9002 - dynamid</a></td><td>5.96</td><td>959 KB</td><td>10292</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.114</td><td><a data-content="DynamID authentication" class="popup">9002 - dynamid</a></td><td>5.91</td><td>935 KB</td><td>9932</td><td>60 minutes</td></tr><tr><td>21.66.71.204</td><td>21.66.10.44</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>5.91</td><td>87 KB</td><td>1221</td><td>30 seconds</td></tr><tr><td>21.66.71.204</td><td>21.66.237.117</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>5.91</td><td>126 KB</td><td>1607</td><td>30 seconds</td></tr><tr><td>189.119.19.9</td><td>21.66.10.34</td><td><a>0</a></td><td>5.91</td><td>19 KB</td><td>325</td><td>0 seconds</td></tr><tr><td>189.119.19.26</td><td>21.66.10.34</td><td><a>0</a></td><td>5.91</td><td>19 KB</td><td>325</td><td>0 seconds</td></tr><tr><td>189.119.19.210</td><td>21.66.10.34</td><td><a>0</a></td><td>5.91</td><td>19 KB</td><td>325</td><td>0 seconds</td></tr><tr><td>189.119.64.26</td><td>21.66.10.157</td><td><a>0</a></td><td>5.91</td><td>19 KB</td><td>325</td><td>0 seconds</td></tr><tr><td>21.66.40.63</td><td>21.66.121.172</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>5.84</td><td>1056 KB</td><td>11758</td><td>60 minutes</td></tr><tr><td>21.66.40.55</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>5.45</td><td>76 KB</td><td>301</td><td>30 minutes</td></tr><tr><td>110.145.216.18</td><td>21.66.79.47</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>5.11</td><td>51 KB</td><td>699</td><td>30 seconds</td></tr><tr><td>110.145.216.18</td><td>21.66.79.93</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>5.07</td><td>65 KB</td><td>856</td><td>30 seconds</td></tr><tr><td>21.66.40.63</td><td>21.66.121.1</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>5.00</td><td>890 KB</td><td>9943</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.4</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.96</td><td>896 KB</td><td>10051</td><td>61 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.182</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.95</td><td>772 KB</td><td>8173</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.114</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.93</td><td>777 KB</td><td>8284</td><td>60 minutes</td></tr><tr><td>21.66.71.204</td><td>21.66.10.141</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>4.91</td><td>117 KB</td><td>1496</td><td>30 seconds</td></tr><tr><td>21.66.71.204</td><td>21.66.121.230</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>4.91</td><td>106 KB</td><td>1384</td><td>30 seconds</td></tr><tr><td>21.66.40.63</td><td>21.66.81.215</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.89</td><td>800 KB</td><td>8664</td><td>60 minutes</td></tr><tr><td>189.119.64.9</td><td>21.66.10.34</td><td><a>0</a></td><td>4.82</td><td>16 KB</td><td>265</td><td>0 seconds</td></tr><tr><td>79.179.139.252</td><td>21.66.10.233</td><td><a data-content="Kerberos" class="popup">88 - kerberos</a></td><td>3.96</td><td>166 KB</td><td>809</td><td>30 minutes</td></tr><tr><td>21.66.71.204</td><td>21.66.79.93</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>3.91</td><td>112 KB</td><td>1441</td><td>30 seconds</td></tr><tr><td>21.66.71.204</td><td>21.66.79.47</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>3.89</td><td>112 KB</td><td>1437</td><td>30 seconds</td></tr><tr><td>110.145.96.229</td><td>21.66.10.231</td><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>3.49</td><td>24 KB</td><td>576</td><td>6 seconds</td></tr><tr><td>79.229.206.182</td><td>21.66.10.231</td><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>3.35</td><td>23 KB</td><td>552</td><td>6 seconds</td></tr><tr><td>189.157.128.191</td><td>21.66.10.44</td><td><a data-content="Domain Name Server" class="popup">53 - domain</a></td><td>3.20</td><td>49 KB</td><td>196</td><td>111 seconds</td></tr><tr><td>21.66.178.245</td><td>21.66.10.51</td><td><a data-content="World Wide Web HTTP" class="popup">80 - http</a></td><td>3.16</td><td>11 KB</td><td>261</td><td>7 seconds</td></tr><tr><td>79.229.20.46</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>3.09</td><td>42 KB</td><td>179</td><td>30 minutes</td></tr></tbody>
+        <tfoot class="full-width" id="conn_in_overflow"></tfoot>
+    </table>
+  </div>
+<!--
+----------------- TAB: outputs -----------------
+-->
+  <div class="ui tab segment active" data-tab="outputs" id="tab-output">
+    <div id="out_pagination"><button class="ui button disabled">prev</button><span>Showing 1-50 of 53018</span><button class="ui button">next</button></div>
+    <table class="ui very compact sortable celled structured table">
+        <thead>
+          <tr id="conn_out_h"><th data-value="src">Source IP</th><th data-value="dst">Dest. IP</th><th data-value="port">Dest. Port</th><th data-value="links" class="sorted descending">Count / min</th><th data-value="sum_bytes">Sum Bytes</th><th data-value="sum_packets">Sum Packets</th><th data-value="avg_duration">Avg Duration</th></tr>
+        </thead>
+        <tbody id="conn_out"><tr><td>21.66.229.218</td><td>79.35.45.131</td><td><a data-content="World Wide Web HTTP" class="popup">80 - http</a></td><td>62.78</td><td>34 MB</td><td>377641</td><td>60 minutes</td></tr><tr><td>21.66.91.108</td><td>79.229.19.169</td><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>48.91</td><td>8532 KB</td><td>39114</td><td>60 minutes</td></tr><tr><td>21.66.36.213</td><td>21.66.10.70</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>23.47</td><td>1383 KB</td><td>10704</td><td>61 minutes</td></tr><tr><td>21.66.36.104</td><td>21.66.10.70</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>23.27</td><td>1393 KB</td><td>10770</td><td>61 minutes</td></tr><tr><td>21.66.36.38</td><td>79.35.64.27</td><td><a data-content="Operations Manager - SDK Service" class="popup">5724 - omsdk</a></td><td>22.76</td><td>143 MB</td><td>547007</td><td>60 minutes</td></tr><tr><td>21.66.174.236</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>17.44</td><td>286 KB</td><td>988</td><td>30 minutes</td></tr><tr><td>21.66.33.86</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>16.25</td><td>229 KB</td><td>904</td><td>30 minutes</td></tr><tr><td>21.66.203.184</td><td>79.35.64.166</td><td><a data-content="Zabbix Trapper" class="popup">10051 - zabbix-tra</a></td><td>13.20</td><td>5900 KB</td><td>8216</td><td>60 minutes</td></tr><tr><td>21.66.145.134</td><td>21.66.10.44</td><td><a data-content="Domain Name Server" class="popup">53 - domain</a></td><td>13.11</td><td>379 KB</td><td>5167</td><td>60 minutes</td></tr><tr><td>21.66.36.209</td><td>79.35.64.166</td><td><a data-content="Zabbix Trapper" class="popup">10051 - zabbix-tra</a></td><td>13.05</td><td>6358 KB</td><td>8506</td><td>60 minutes</td></tr><tr><td>21.66.30.197</td><td>79.35.215.138</td><td><a data-content="cmd like exec, but automatic authentication is performed as for login server" class="popup">514 - shell</a></td><td>12.45</td><td>51 KB</td><td>686</td><td>30 seconds</td></tr><tr><td>21.66.40.209</td><td>79.146.47.84</td><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>11.91</td><td>3008 KB</td><td>36645</td><td>61 minutes</td></tr><tr><td>21.66.166.33</td><td>79.35.215.31</td><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>10.35</td><td>7891 KB</td><td>18578</td><td>62 minutes</td></tr><tr><td>21.66.189.109</td><td>79.35.134.32</td><td><a>0</a></td><td>10.07</td><td>240 KB</td><td>3320</td><td>0 seconds</td></tr><tr><td>21.66.212.6</td><td>21.66.10.70</td><td><a data-content="Kerberos" class="popup">88 - kerberos</a></td><td>9.85</td><td>263 KB</td><td>2168</td><td>60 minutes</td></tr><tr><td>21.66.166.33</td><td>79.35.215.138</td><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>8.44</td><td>5302 KB</td><td>12465</td><td>61 minutes</td></tr><tr><td>21.66.140.197</td><td>79.35.179.229</td><td><a data-content="ISP shared public data control" class="popup">1636 - isdc</a></td><td>7.78</td><td>893 KB</td><td>8870</td><td>60 minutes</td></tr><tr><td>21.66.218.30</td><td>79.35.191.217</td><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>6.27</td><td>6993 KB</td><td>88895</td><td>60 minutes</td></tr><tr><td>21.66.140.172</td><td>79.35.179.229</td><td><a data-content="ISP shared public data control" class="popup">1636 - isdc</a></td><td>6.16</td><td>713 KB</td><td>7093</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.182</td><td><a>9003</a></td><td>5.98</td><td>882 KB</td><td>9081</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.182</td><td><a data-content="DynamID authentication" class="popup">9002 - dynamid</a></td><td>5.96</td><td>959 KB</td><td>10292</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.114</td><td><a data-content="DynamID authentication" class="popup">9002 - dynamid</a></td><td>5.91</td><td>935 KB</td><td>9932</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>79.35.146.97</td><td><a>9004</a></td><td>5.91</td><td>966 KB</td><td>10376</td><td>60 minutes</td></tr><tr><td>21.66.71.204</td><td>21.66.10.44</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>5.91</td><td>87 KB</td><td>1221</td><td>30 seconds</td></tr><tr><td>21.66.71.204</td><td>21.66.237.117</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>5.91</td><td>126 KB</td><td>1607</td><td>30 seconds</td></tr><tr><td>21.66.40.63</td><td>21.66.121.172</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>5.84</td><td>1056 KB</td><td>11758</td><td>60 minutes</td></tr><tr><td>21.66.40.55</td><td>21.66.10.233</td><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>5.45</td><td>76 KB</td><td>301</td><td>30 minutes</td></tr><tr><td>21.66.40.63</td><td>79.35.146.97</td><td><a data-content="DynamID authentication" class="popup">9002 - dynamid</a></td><td>5.13</td><td>821 KB</td><td>8804</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>79.146.245.41</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>5.13</td><td>973 KB</td><td>11174</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>79.35.146.110</td><td><a data-content="DynamID authentication" class="popup">9002 - dynamid</a></td><td>5.09</td><td>818 KB</td><td>8797</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.1</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>5.00</td><td>890 KB</td><td>9943</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.4</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.96</td><td>896 KB</td><td>10051</td><td>61 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.182</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.95</td><td>772 KB</td><td>8173</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>21.66.121.114</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.93</td><td>777 KB</td><td>8284</td><td>60 minutes</td></tr><tr><td>21.66.71.204</td><td>21.66.10.141</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>4.91</td><td>117 KB</td><td>1496</td><td>30 seconds</td></tr><tr><td>21.66.71.204</td><td>21.66.121.230</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>4.91</td><td>106 KB</td><td>1384</td><td>30 seconds</td></tr><tr><td>21.66.40.63</td><td>21.66.81.215</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.89</td><td>800 KB</td><td>8664</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>79.35.146.97</td><td><a>9003</a></td><td>4.87</td><td>847 KB</td><td>9267</td><td>61 minutes</td></tr><tr><td>21.66.40.63</td><td>79.35.146.110</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.85</td><td>1203 KB</td><td>14938</td><td>60 minutes</td></tr><tr><td>21.66.40.63</td><td>79.146.245.179</td><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>4.64</td><td>846 KB</td><td>9508</td><td>61 minutes</td></tr><tr><td>21.66.229.218</td><td>79.35.45.131</td><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>4.09</td><td>2521 KB</td><td>25354</td><td>60 minutes</td></tr><tr><td>21.66.134.35</td><td>79.35.157.235</td><td><a>0</a></td><td>4.02</td><td>13 KB</td><td>221</td><td>0 seconds</td></tr><tr><td>21.66.71.204</td><td>21.66.79.93</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>3.91</td><td>112 KB</td><td>1441</td><td>30 seconds</td></tr><tr><td>21.66.71.204</td><td>21.66.79.47</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>3.89</td><td>112 KB</td><td>1437</td><td>30 seconds</td></tr><tr><td>21.66.71.204</td><td>79.35.100.131</td><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>3.89</td><td>100 KB</td><td>1264</td><td>30 seconds</td></tr><tr><td>21.66.205.146</td><td>189.6.153.106</td><td><a>0</a></td><td>3.29</td><td>11 KB</td><td>181</td><td>0 seconds</td></tr><tr><td>21.66.178.245</td><td>21.66.10.51</td><td><a data-content="World Wide Web HTTP" class="popup">80 - http</a></td><td>3.16</td><td>11 KB</td><td>261</td><td>7 seconds</td></tr><tr><td>21.66.15.230</td><td>79.35.179.80</td><td><a data-content="cbt" class="popup">7777 - cbt</a></td><td>3.02</td><td>15 MB</td><td>25928</td><td>61 minutes</td></tr><tr><td>21.66.36.38</td><td>79.35.134.182</td><td><a data-content="Distributed SCADA Networking Rendezvous Port" class="popup">8086 - d-s-n</a></td><td>2.95</td><td>183 KB</td><td>812</td><td>60 minutes</td></tr><tr><td>21.66.40.204</td><td>189.6.153.106</td><td><a>0</a></td><td>2.71</td><td>8940 B</td><td>149</td><td>0 seconds</td></tr></tbody>
+        <tfoot class="full-width" id="conn_out_overflow"></tfoot>
+    </table>
+  </div>
+<!--
+----------------- TAB: ports -----------------
+-->
+  <div class="ui tab segment" data-tab="ports" id="tab-ports">
+    <div id="port_pagination"><button class="ui button disabled">prev</button><span>Showing 1-50 of 20371</span><button class="ui button">next</button></div>
+    <table class="ui very compact sortable celled structured table">
+        <thead>
+          <tr id="ports_in_h"><th data-value="port">Port Accessed</th><th data-value="links" class="sorted descending">Count / min</th></tr>
+        </thead>
+        <tbody id="ports_in"><tr><td><a data-content="NETBIOS Name Service" class="popup">137 - netbios-ns</a></td><td>1.04K</td></tr><tr><td><a data-content="http protocol over TLS/SSL" class="popup">443 - https</a></td><td>693.71</td></tr><tr><td><a data-content="Domain Name Server" class="popup">53 - domain</a></td><td>311.02</td></tr><tr><td><a data-content="Lightweight Directory Access Protocol" class="popup">389 - ldap</a></td><td>219.58</td></tr><tr><td><a>0</a></td><td>172.89</td></tr><tr><td><a data-content="DCE endpoint resolution" class="popup">135 - epmap</a></td><td>70.98</td></tr><tr><td><a data-content="SNMP" class="popup">161 - snmp</a></td><td>70.67</td></tr><tr><td><a data-content="World Wide Web HTTP" class="popup">80 - http</a></td><td>50.33</td></tr><tr><td><a data-content="ldap protocol over TLS/SSL (was sldap)" class="popup">636 - ldaps</a></td><td>40.16</td></tr><tr><td><a data-content="ETL Service Manager" class="popup">9001 - etlservice</a></td><td>33.11</td></tr><tr><td><a data-content="Kerberos" class="popup">88 - kerberos</a></td><td>27.44</td></tr><tr><td><a>49154</a></td><td>22.58</td></tr><tr><td><a data-content="DynamID authentication" class="popup">9002 - dynamid</a></td><td>11.87</td></tr><tr><td><a data-content="Microsoft Global Catalog" class="popup">3268 - msft-gc</a></td><td>10.96</td></tr><tr><td><a data-content="The Secure Shell (SSH) Protocol" class="popup">22 - ssh</a></td><td>10.31</td></tr><tr><td><a data-content="Network Time Protocol" class="popup">123 - ntp</a></td><td>6.65</td></tr><tr><td><a data-content="Microsoft-DS" class="popup">445 - microsoft-</a></td><td>6.16</td></tr><tr><td><a>9003</a></td><td>6.00</td></tr><tr><td><a data-content="MonkeyCom" class="popup">9898 - monkeycom</a></td><td>4.93</td></tr><tr><td><a>45635</a></td><td>4.45</td></tr><tr><td><a>26307</a></td><td>4.35</td></tr><tr><td><a>11304</a></td><td>4.02</td></tr><tr><td><a>17264</a></td><td>4.00</td></tr><tr><td><a data-content="NETBIOS Session Service" class="popup">139 - netbios-ss</a></td><td>2.93</td></tr><tr><td><a>10123</a></td><td>2.35</td></tr><tr><td><a>49155</a></td><td>2.16</td></tr><tr><td><a data-content="HTTP Alternate (see port 80)" class="popup">8080 - http-alt</a></td><td>2.02</td></tr><tr><td><a data-content="Niche Data Server Connect" class="popup">3890 - ndsconnect</a></td><td>1.98</td></tr><tr><td><a data-content="WBEM CIM-XML (HTTPS)" class="popup">5989 - wbem-https</a></td><td>1.55</td></tr><tr><td><a data-content="cbt" class="popup">7777 - cbt</a></td><td>1.27</td></tr><tr><td><a data-content="SOAP Service Port" class="popup">7627 - soap-http</a></td><td>1.15</td></tr><tr><td><a data-content="xtgui information service" class="popup">4095 - xtgui</a></td><td>1.05</td></tr><tr><td><a>49156</a></td><td>1.04</td></tr><tr><td><a data-content="HTTP Alternate" class="popup">8008 - http-alt</a></td><td>1.02</td></tr><tr><td><a data-content="PCsync HTTPS" class="popup">8443 - pcsync-htt</a></td><td>1.02</td></tr><tr><td><a data-content="Compaq RPM Server Port" class="popup">3257 - cpqrpm-ser</a></td><td>1.02</td></tr><tr><td><a data-content="http-mgmt" class="popup">280 - http-mgmt</a></td><td>1.02</td></tr><tr><td><a>1024</a></td><td>1.00</td></tr><tr><td><a data-content="OSM Applet Server" class="popup">9990 - osm-appsrv</a></td><td>1.00</td></tr><tr><td><a data-content="HTTP Event Port" class="popup">2069 - event-port</a></td><td>1.00</td></tr><tr><td><a data-content="OSM Event Server" class="popup">9991 - osm-oev</a></td><td>1.00</td></tr><tr><td><a data-content="BRE (Bridge Relay Element)" class="popup">4096 - bre</a></td><td>1.00</td></tr><tr><td><a data-content="iRDMI" class="popup">8000 - irdmi</a></td><td>1.00</td></tr><tr><td><a>8222</a></td><td>0.98</td></tr><tr><td><a data-content="IntraIntra" class="popup">3202 - intraintra</a></td><td>0.98</td></tr><tr><td><a data-content="MetaEdit+ Multi-User" class="popup">6360 - metaedit-m</a></td><td>0.98</td></tr><tr><td><a data-content="hp performance data alarm manager" class="popup">383 - hp-alarm-m</a></td><td>0.96</td></tr><tr><td><a data-content="RxMon" class="popup">1311 - rxmon</a></td><td>0.96</td></tr><tr><td><a data-content="Remote MT Protocol" class="popup">411 - rmt</a></td><td>0.96</td></tr><tr><td><a>63520</a></td><td>0.96</td></tr></tbody>
+        <tfoot class="full-width" id="ports_in_overflow"></tfoot>
+    </table>
+  </div>
+<!--
+----------------- TAB: children -----------------
+-->
+  <div class="ui tab segment" data-tab="children" id="tab-children">
+    <div id="child_pagination"><button class="ui button disabled">prev</button><span>Showing 1-1 of 1</span><button class="ui button disabled">next</button></div>
+    <table class="ui very compact sortable celled structured table">
+        <thead>
+          <tr id="child_nodes_h"><th data-value="ipstart">Address</th><th data-value="hostname">Name</th><th data-value="endpoints">Active Endpoints</th><th data-value="ratio">Role (0=client, 1=server)</th></tr>
+        </thead>
+        <tbody id="child_nodes"><tr><td><a href="./metadata#ip=21.66.0.0/16&amp;ds=ds1"><i class="tasks icon"></i>21.66.0.0/16</a></td><td></td><td>1179</td><td>0.51 (mixed client/server)</td></tr></tbody>
+        <tfoot class="full-width" id="child_nodes_overflow"></tfoot>
+    </table>
+  </div>
+</div>
+<!--
+----------------- Port info update dialog -----------------
+-->
+<div class="ui modal ports">
+    <div class="header">Port <span id="port_number"></span></div>
+    <div class="content">
+        <table class="ui table">
+            <tbody><tr><td class="right aligned">Use Name Translation:</td><td><div class="ui fitted toggle checkbox"><input id="port_active" type="checkbox"><label></label></div></td></tr>
+            <tr><td class="right aligned">Default Name:</td><td id="port_name"></td></tr>
+            <tr><td class="right aligned">Default Description:</td><td id="port_description"></td></tr>
+            <tr><td class="right aligned">Expected Protocols:</td><td id="port_protocols"></td></tr>
+            <tr>
+              <td class="right aligned">Alias Name:</td>
+              <td>
+                <div class="ui input" data-content="A custom alias to override the default name">
+                  <input placeholder="port name" id="port_alias_name" type="text">
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="right aligned">Alias Description:</td>
+              <td>
+                <div class="ui input" data-content="A custom alias to override the default description">
+                  <input placeholder="port description" id="port_alias_description" type="text">
+                </div>
+              </td>
+            </tr>
+        </tbody></table>
+    </div>
+    <div class="actions">
+        <div class="ui blue ok button">
+            <i class="save icon"></i>
+            Save
+        </div>
+        <div class="ui red cancel button">
+            <i class="cancel icon"></i>
+            Cancel
+        </div>
+    </div>
+</div>
+
+<!-- Demo data warning -->
+<div id="demo_msg" class="ui message transition visible" style="display: block !important;">
+  <i class="close icon"></i>
+  <div class="header">
+    Demonstration
+  </div>
+  <p>This is a subset of real network data, anonymized for privacy. The database is read-only and changes will not be saved.</p>
+</div>
+
+<script type="text/javascript">
+window.onload = function () {
+    //enable header dropdown
+    $(document.getElementById("support_menu")).dropdown({
+      on: 'hover'
+    });
+
+    if (typeof(init) === "function") {
+        init();
+    }
+};
+</script>
+
+</body>
+</html>

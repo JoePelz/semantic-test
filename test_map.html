@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <title>Test Site</title>
+  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="nouislider.pips.css">
+  <link rel="stylesheet" type="text/css" href="nouislider-dark.css">
+  <link rel="stylesheet" type="text/css" href="test.css">
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script src="semantic/dist/semantic.min.js"></script>
+  <script src="test.js"></script>
+</head>
+
+<body>
+<div class="ui inverted main menu" id="navbar">
+    <div class="header item">
+        <a href="/"><img class="logo ui middle aligned spaced image" src="/static/img/logo_light.png" width="32px" height="32px">Systems Architecture Mapper</a>
+    </div>
+    <a class="item active" href="./map">
+        <i class="sitemap icon"></i>
+        Map
+    </a>
+    <a class="item " href="./table">
+        <i class="list layout icon"></i>
+        Table View
+    </a>
+    <a class="item " href="./metadata">
+        <i class="tasks icon"></i>
+        Host Details
+    </a>
+    <a class="item " href="./stats">
+        <i class="filter icon"></i>
+        Stats
+    </a>
+    <a class="item " href="./settings_page">
+        <i class="settings icon"></i>
+        Settings
+    </a>
+</div>
+<!--
+===========================================================
+
+----------------------    Main  Page   --------------------
+
+===========================================================
+-->
+<div id="output" style="top: 58px;">
+  <div id="sidebar" class="ui sidebarholder pushable">
+    <div class="ui sidebar visible left">
+      <div class="ui inverted segment">
+        <div class="item" id="time_box">
+          <label class="configLabel">Time Range:</label>
+          <div class="slider-box">
+            <div id="slider-date" class="noUi-target noUi-ltr noUi-horizontal noUi-background"><div class="noUi-base"><div class="noUi-origin noUi-connect noUi-draggable" style="left: 0%;"><div class="noUi-handle noUi-handle-lower"></div></div><div class="noUi-origin noUi-background" style="left: 100%;"><div class="noUi-handle noUi-handle-upper"></div></div></div><div class="noUi-pips noUi-pips-horizontal"><div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 0.00000%"></div><div class="noUi-value noUi-value-horizontal noUi-value-large" style="left: 0.00000%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 5.88235%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 11.76471%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 17.64706%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 23.52941%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 29.41176%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 35.29412%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 41.17647%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 47.05882%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 52.94118%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 58.82353%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 64.70588%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 70.58824%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 76.47059%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 82.35294%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 88.23529%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-normal" style="left: 94.11765%"></div><div class="noUi-marker noUi-marker-horizontal noUi-marker-large" style="left: 100.00000%"></div><div class="noUi-value noUi-value-horizontal noUi-value-large" style="left: 100.00000%"></div></div></div>
+          </div>
+          <div class="ui inverted right labeled fluid input">
+            <input class="slider-input" id="input-start" value="2016-06-19 19:00">
+            <div class="ui label">From</div>
+          </div>
+          <div class="ui inverted right labeled fluid input">
+            <input class="slider-input" id="input-end" value="2016-06-20 08:00">
+            <div class="ui label">To</div>
+          </div>
+        </div>
+        <div id="mapconfig" class="ui inverted accordion"><div class="textinput"><label class="configlabel" for="search">Search</label><div class="ui inverted fluid icon input" data-tooltip="Find an IP address. e.g. 192.168.0.12" data-inverted="true" data-position="top left" data-delay="500"><input id="search" placeholder="Find IP..." type="text"><i class="search icon"></i></div></div><div class="textinput"><label class="configlabel" for="filter">Port Filter</label><div class="ui inverted fluid icon input" data-tooltip="Filter by port number. Try: 80" data-inverted="true" data-position="top left" data-delay="500"><input id="filter" placeholder="Filter by port..." type="text"><i class="filter icon"></i></div></div><div class="textinput"><label class="configlabel" for="proto_filter">Protocol Filter</label><div class="ui inverted fluid icon input" data-tooltip="Filter by protocol. Try: UDP" data-inverted="true" data-position="top left" data-delay="500"><input id="proto_filter" placeholder="Filter by protocol..." type="text"><i class="exchange icon"></i></div></div><div class="title active"><i class="dropdown icon"></i>Datasources</div><div class="content active"><button class="ui icon inverted button" id="autorefresh" data-tooltip="Autorefresh the node map" data-inverted="true" data-position="top left" data-delay="500"><i class="refresh icon"></i></button><div class="divider"></div><div class="ui buttons vertical labeled icon"><button class="ui icon inverted button active" id="ds_1" data-tooltip="Use the default datasource" data-inverted="true" data-position="top left" data-delay="500"><i class="database icon"></i>default</button></div></div><div class="title active"><i class="dropdown icon"></i>Line Width</div><div class="content active"><div class="ui buttons vertical"><button class="ui inverted button active" id="lw_links" data-tooltip="Width based on number of occurrences" data-inverted="true" data-position="top left" data-delay="500">Link Count</button><button class="ui inverted button" id="lw_bytes" data-tooltip="Width based on number of Bytes transferred" data-inverted="true" data-position="top left" data-delay="500">Byte Count</button><button class="ui inverted button" id="lw_packets" data-tooltip="Width based on number of packets transmitted" data-inverted="true" data-position="top left" data-delay="500">Packet Count</button></div></div><div class="title active"><i class="dropdown icon"></i>Show/Hide</div><div class="content active"><button class="ui icon inverted button active" id="show_clients" data-tooltip="Show Pure Clients" data-inverted="true" data-position="top left" data-delay="500"><i class="desktop icon"></i></button><button class="ui icon inverted button active" id="show_servers" data-tooltip="Show Pure Servers" data-inverted="true" data-position="top left" data-delay="500"><i class="server icon"></i></button><button class="ui icon inverted button active" id="show_inputs" data-tooltip="Show Inbound Connections" data-inverted="true" data-position="top left" data-delay="500"><i class="sign in icon"></i></button><button class="ui icon inverted button active" id="show_outputs" data-tooltip="Show Outbound Connections" data-inverted="true" data-position="top left" data-delay="500"><i class="sign out icon"></i></button></div><div class="title active"><i class="dropdown icon"></i>Layout</div><div class="content active"><div class="title active"><i class="dropdown icon"></i>mode</div><div class="content active"><div class="ui buttons icon"><button class="ui icon inverted button active" id="lm_Heirarchy" data-tooltip="Use Heirarchy" data-inverted="true" data-position="top left" data-delay="500"><i class="cube icon"></i></button><button class="ui icon inverted button" id="lm_Flat" data-tooltip="Flatten Heirarchy" data-inverted="true" data-position="top left" data-delay="500"><i class="cubes icon"></i></button></div></div><div class="title active"><i class="dropdown icon"></i>arrangement</div><div class="content active"><div class="ui buttons icon"><button class="ui icon inverted button active" id="la_Address" data-tooltip="Address" data-inverted="true" data-position="top left" data-delay="500"><i class="qrcode icon"></i></button><button class="ui icon inverted button" id="la_Grid" data-tooltip="Grid" data-inverted="true" data-position="top left" data-delay="500"><i class="table icon"></i></button><button class="ui icon inverted button" id="la_Circle" data-tooltip="Circle" data-inverted="true" data-position="top left" data-delay="500"><i class="maximize icon"></i></button></div></div></div></div>
+      </div>
+    </div>
+    <div tabindex="0" class="pusher">
+      <div id="pulltab">
+        <a class="item drawer-toggle">
+          <i class="content icon"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+  <canvas id="canvas" width="1920" height="633"></canvas>
+  <!--
+  -----------------------------------------------------------
+  -----------------  Selection Details Panel  ---------------
+  -----------------------------------------------------------
+  -->
+  <div id="sel_bar" style="max-height: 593px;">
+    <div id="sel_titles">
+      <h4>No selection</h4>
+      <h5>&nbsp;</h5>
+    </div>
+    <div id="selectionInfo" class="ui styled fluid accordion">
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Unique inbound clients: <span id="unique_in">0</span>
+      </div>
+      <div class="content" style="max-height: 397px;">
+        <div class="transition hidden">
+          <table class="ui very compact sortable celled structured table">
+            <thead>
+            <tr id="conn_in_h">
+              <th>Source IP</th>
+              <th>Dest. Port</th>
+              <th>Count</th>
+            </tr>
+            </thead>
+            <tbody id="conn_in"></tbody>
+            <tfoot class="full-width" id="conn_in_overflow"></tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Unique servers contacted: <span id="unique_out">0</span>
+      </div>
+      <div class="content" style="max-height: 397px;">
+        <div class="transition hidden">
+          <table class="ui very compact sortable celled structured table">
+            <thead>
+              <tr id="conn_out_h">
+                <th>Dest. IP</th>
+                <th>Dest. Port</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody id="conn_out"></tbody>
+            <tfoot class="full-width" id="conn_out_overflow"></tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="title">
+        <i class="dropdown icon"></i>
+        Unique ports accessed: <span id="unique_ports">0</span>
+      </div>
+      <div class="content" style="max-height: 397px;">
+        <div class="transition hidden">
+          <table class="ui very compact sortable celled table">
+            <thead>
+              <tr id="ports_in_h">
+                <th>Port Accessed</th>
+                <th class="sorted descending">Occurrences</th>
+              </tr>
+            </thead>
+            <tbody id="ports_in"></tbody>
+            <tfoot class="full-width" id="ports_in_overflow"></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="sel_link" class="bottom attached ui segment" style="display: none"></div>
+  </div> <!-- end selection info div -->
+
+</div> <!-- end div id=output -->
+<!--
+===========================================================
+
+---------------------- Port Edit Popup --------------------
+
+===========================================================
+-->
+<div class="ui modal ports">
+  <div class="header">Port <span id="port_number"></span></div>
+  <div class="content">
+    <table class="ui table">
+      <tbody><tr><td class="right aligned">Use Name Translation:</td><td><div class="ui fitted toggle checkbox"><input id="port_active" type="checkbox"><label></label></div></td></tr>
+      <tr><td class="right aligned">Default Name:</td><td id="port_name"></td></tr>
+      <tr><td class="right aligned">Default Description:</td><td id="port_description"></td></tr>
+      <tr><td class="right aligned">Expected Protocols:</td><td id="port_protocols"></td></tr>
+      <tr>
+        <td class="right aligned">Alias Name:</td>
+        <td>
+          <div class="ui input" data-content="A custom alias to override the default name">
+            <input placeholder="port name" id="port_alias_name" type="text">
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="right aligned">Alias Description:</td>
+        <td>
+          <div class="ui input" data-content="A custom alias to override the default description">
+            <input placeholder="port description" id="port_alias_description" type="text">
+          </div>
+        </td>
+      </tr>
+    </tbody></table>
+  </div>
+  <div class="actions">
+    <div class="ui blue ok button">
+      <i class="save icon"></i>
+      Save
+    </div>
+    <div class="ui red cancel button">
+      <i class="cancel icon"></i>
+      Cancel
+    </div>
+  </div>
+</div>
+<!--
+===========================================================
+
+--------------------- Generic Msg Popup -------------------
+
+===========================================================
+-->
+<div id="popup_modal" class="ui small modal">
+  <i class="close icon"></i>
+  <div id="popup_title" class="header">
+    Success
+  </div>
+  <div class="content">
+    <div id="popup_text" class="description">
+      Your changes were applied successfully
+    </div>
+  </div>
+  <div class="actions">
+    <div class="ui cancel button">OK</div>
+  </div>
+</div>
+<!--
+===========================================================
+
+---------------------  Demo Data Popup  -------------------
+
+===========================================================
+-->
+<div id="demo_msg" class="ui message transition hidden">
+  <i class="close icon"></i>
+  <div class="header">
+    Demonstration
+  </div>
+  <p>This is a subset of real network data, anonymized for privacy. The database is read-only and changes will not be saved.</p>
+</div>
+
+<script type="text/javascript">
+window.onload = function () {
+    //enable header dropdown
+    $(document.getElementById("support_menu")).dropdown({
+      on: 'hover'
+    });
+
+    if (typeof(init) === "function") {
+      console.log("Skipping init");
+      //init();
+    }
+};
+</script>
+
+</body>
+</html>

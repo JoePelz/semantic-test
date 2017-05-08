@@ -39,16 +39,13 @@ function init() {
   ;
 }
 
-
-
-
 (function () {
   "use strict";
   let map_config = {};
-  map_config.structure = {};
+  map_config.structure = {objects: [], children: {}};
 
   map_config.reset = function () {
-    map_config.structure = {};
+    map_config.structure = {objects: [], children: {}};
   }
 
   map_config.clear_html = function (accordion) {
@@ -56,7 +53,13 @@ function init() {
   };
 
   map_config.make_html = function (parent, structure) {
-    Object.keys(structure).forEach(function (key) {
+    structure.objects.forEach( function (item) {
+      parent.appendChild(item);
+    });
+
+    Object.keys(structure.children).forEach(function (key) {
+      let cat = structure.children[key];
+
       let titleDiv = document.createElement("DIV");
       titleDiv.className = "title"
       let ddi = document.createElement("I");
@@ -66,17 +69,7 @@ function init() {
       let contentDiv = document.createElement("DIV");
       contentDiv.className = "content";
 
-      //objects attached?
-      let cat = structure[key];
-      if (cat.hasOwnProperty("objects")) {
-        cat.objects.forEach( function (item) {
-          contentDiv.appendChild(item);
-        });
-      }
-
-      if (cat.hasOwnProperty("children") && Object.keys(cat.children).length > 0) {
-        map_config.make_html(contentDiv, cat.children);
-      }
+      map_config.make_html(contentDiv, cat);
 
       parent.appendChild(titleDiv);
       parent.appendChild(contentDiv);
@@ -98,40 +91,44 @@ function init() {
   };
 
   map_config.add_category = function (cat) {
-    if (map_config.structure.hasOwnProperty(cat)) {
+    if (map_config.structure.children.hasOwnProperty(cat)) {
       return;
     }
-    map_config.structure[cat] = {objects: [], children: {}};
+    map_config.structure.children[cat] = {objects: [], children: {}};
   };
 
   map_config.add_subcategory = function (cat, subcat) {
-    if (!map_config.structure.hasOwnProperty(cat)) {
+    if (!map_config.structure.children.hasOwnProperty(cat)) {
       map_config.add_category(cat);
     }
-    if (map_config.structure[cat].children.hasOwnProperty(subcat)) {
+    if (map_config.structure.children[cat].children.hasOwnProperty(subcat)) {
       return;
     }
-    map_config.structure[cat].children[subcat] = {objects: [], children: {}};
+    map_config.structure.children[cat].children[subcat] = {objects: [], children: {}};
   };
 
   map_config.add_object = function (cat, subcat, obj) {
-    if (!map_config.structure.hasOwnProperty(cat)) {
-      map_config.add_category(cat);
-    }
-    if (subcat) {
-      if (!map_config.structure[cat].children.hasOwnProperty(subcat)) {
-        map_config.add_subcategory(cat, subcat);
+    if (cat) {
+      if (!map_config.structure.children.hasOwnProperty(cat)) {
+        map_config.add_category(cat);
       }
-      map_config.structure[cat].children[subcat].objects.push(obj);
+      if (subcat) {
+        if (!map_config.structure.children[cat].children.hasOwnProperty(subcat)) {
+          map_config.add_subcategory(cat, subcat);
+        }
+        map_config.structure.children[cat].children[subcat].objects.push(obj);
+      } else {
+        map_config.structure.children[cat].objects.push(obj);
+      }
     } else {
-      map_config.structure[cat].objects.push(obj);
+      map_config.structure.objects.push(obj);
     }
   }
 
   map_config.create_iconbutton = function (icon_name, tooltip, callback) {
     //create button
     let btn = document.createElement("BUTTON");
-    btn.className = "ui icon inverted toggle button";
+    btn.className = "ui icon inverted button";
     // .dataset[...] is for the tooltip.
     btn.dataset["tooltip"] = tooltip;
     btn.dataset["inverted"] = true;
@@ -148,16 +145,82 @@ function init() {
     return btn;
   };
 
+  map_config.create_togglebutton = function (icon_name, tooltip, callback) {
+    let btn = document.createElement("BUTTON");
+    btn.className = "ui icon inverted button";
+    // .dataset[...] is for the tooltip.
+    btn.dataset["tooltip"] = tooltip;
+    btn.dataset["inverted"] = true;
+    btn.dataset["position"] = "top left";
+    btn.dataset["delay"] = "500";
+
+    let icon = document.createElement("I");
+    icon.className = icon_name + " icon";
+    btn.appendChild(icon);
+    btn.onclick = function (e_click) {
+      btn.classList.toggle('active');
+      if (typeof(callback) === "function") {
+        callback(e_click);
+      }
+    }
+
+    return btn;
+  }
+
   map_config.create_buttongroup = function (btnlist, callback) {
     let group = document.createElement("DIV");
     group.className = "ui icon buttons";
 
+    let handler = {
+      activate: function(e_click) {
+        $(this)
+          .addClass('active')
+          .siblings()
+          .removeClass('active')
+        ;
+        if (typeof(callback) === "function") {
+          callback(e_click);
+        }
+      }
+    }
+
     btnlist.forEach(function (item) {
+      item.onclick = handler.activate;
       group.appendChild(item);
     });
 
     return group;
   };
+
+  map_config.create_input = function (id, label_text, icon_name, placeholder, callback) {
+    let div = document.createElement("DIV");
+    let icon = document.createElement("I");
+    let label = document.createElement("LABEL");
+    let input = document.createElement("INPUT");
+
+    div.classList = "ui inverted fluid icon input";
+    label.appendChild(document.createTextNode(label_text));
+    label.classList = "configlabel";
+    label.htmlFor = id;
+    input.id = id;
+    input.placeholder = placeholder;
+    input.type="text";
+    if (typeof(callback) == "function") {
+      input.oninput = callback;
+    }
+    icon.classList = icon_name + " icon";
+
+    input.dataset["tooltip"] = "pizza sparks";
+    input.dataset["inverted"] = true;
+    input.dataset["position"] = "top left";
+    input.dataset["delay"] = "500";
+
+    div.appendChild(label);
+    div.appendChild(input);
+    div.appendChild(icon);
+
+    return div;
+  }
 
   //install layout
   window.MapConfig = map_config;
@@ -167,7 +230,19 @@ function init() {
 function cb(param) {
   console.log("Clicked!", param);
 }
+
 /* tests
+
+MapConfig.add_object("cat A", null, MapConfig.create_iconbutton("sign in", "Inbound Connections", cb));
+MapConfig.add_object("cat A", null, MapConfig.create_togglebutton("sign out", "Outbound Connections", cb));
+MapConfig.add_object("cat B", "subcat A", MapConfig.create_iconbutton("server", "Pure Servers", cb));
+MapConfig.add_object("cat B", "subcat B", MapConfig.create_iconbutton("desktop", "Pure Clients", cb));
+MapConfig.add_object(null, null, MapConfig.create_iconbutton("cube", "default", cb));
+MapConfig.add_object(null, null, MapConfig.create_iconbutton("cube", "nfdump", cb));
+MapConfig.add_object(null, null, MapConfig.create_iconbutton("cube", "live", cb));
+MapConfig.add_object(null, null, MapConfig.create_input("searchbox", "Read this first", "search", "192.168.0.1", cb));
+
+MapConfig.rebuild();
 
 
 let btnlist = [
@@ -200,6 +275,7 @@ btnlist = [
   MapConfig.create_iconbutton("table", "Grid", cb),
   MapConfig.create_iconbutton("maximize", "Circle", cb)
 ];
+MapConfig.add_object("Layout", "arrangement", MapConfig.create_buttongroup(btnlist, cb));
 
 MapConfig.rebuild();
 

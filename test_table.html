@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <title>Test Site</title>
+  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
+  <link rel="stylesheet" type="text/css" href="test_general.css">
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script src="semantic/dist/semantic.min.js"></script>
+</head>
+
+<body>
+<div class="ui inverted main menu" id="navbar">
+    <div class="header item">
+        <a href="/"><img class="logo ui middle aligned spaced image" src="/static/img/logo_light.png" width="32px" height="32px">Systems Architecture Mapper</a>
+    </div>
+    <a class="item " href="./map">
+        <i class="sitemap icon"></i>
+        Map
+    </a>
+    <a class="item active" href="./table">
+        <i class="list layout icon"></i>
+        Table View
+    </a>
+    <a class="item " href="./metadata">
+        <i class="tasks icon"></i>
+        Host Details
+    </a>
+    <a class="item " href="./stats">
+        <i class="filter icon"></i>
+        Stats
+    </a>
+    <a class="item " href="./settings_page">
+        <i class="settings icon"></i>
+        Settings
+    </a>
+</div>
+<div class="ui">
+<!--
+----------------- Filters -----------------
+-->
+  <div class="ui styled fluid accordion">
+    <div class="title active"><i class="dropdown icon"></i>Filter: <span>env: production</span>, <span>&lt;50% server</span>, <span>&gt;12 conns/s (out)</span></div>
+    <div class="content active" id="filters"><div><div class="ui selection dropdown" tabindex="0"><input name="ds_choice" value="ds1" type="hidden"><i class="dropdown icon"></i><div class="text">default</div><div class="menu" tabindex="-1"><div class="item active selected" data-value="ds1">default</div></div></div><span>Data Source</span></div><div class="filter"><button class="ui compact icon button"><i class="delete red icon"></i></button><div class="ui toggle checkbox"><input title="Enable this filter" name="enabled" type="checkbox"><label class="inline"></label></div><span>Node environment is </span><div class="ui selection dropdown" tabindex="0"><input name="env" value="production" type="hidden"><i class="dropdown icon"></i><div class="text">production</div><div class="menu transition hidden" tabindex="-1"><div class="item active selected" data-value="production" style="">production</div><div class="item" data-value="inherit">inherit</div><div class="item" data-value="dev">dev</div></div></div></div><div class="filter"><button class="ui compact icon button"><i class="delete red icon"></i></button><div class="ui toggle checkbox"><input title="Enable this filter" name="enabled" type="checkbox"><label class="inline"></label></div><span>Client/Server ratio is </span><div class="ui selection dropdown" tabindex="0"><input name="comparator" value="<" type="hidden"><i class="dropdown icon"></i><div class="text">less than</div><div class="menu transition hidden" tabindex="-1"><div class="item" data-value=">" style="">more than</div><div class="item active selected" data-value="<">less than</div></div></div><div class="ui input"><input placeholder="0.5" name="ratio" type="text"></div><span> (0 = client, 1 = server)</span></div><div class="filter"><button class="ui compact icon button"><i class="delete red icon"></i></button><div class="ui toggle checkbox"><input title="Enable this filter" name="enabled" type="checkbox"><label class="inline"></label></div><span>Handles </span><div class="ui selection dropdown" tabindex="0"><input name="comparator" value=">" type="hidden"><i class="dropdown icon"></i><div class="text">more than</div><div class="menu transition hidden" tabindex="-1"><div class="item active selected" data-value=">" style="">more than</div><div class="item" data-value="<">fewer than</div></div></div><div class="ui input"><input placeholder="a number of" name="limit" type="text"></div><div class="ui selection dropdown" tabindex="0"><input name="direction" value="o" type="hidden"><i class="dropdown icon"></i><div class="text">outbound</div><div class="menu transition hidden" tabindex="-1"><div class="item" data-value="i" style="">inbound</div><div class="item active selected" data-value="o">outbound</div><div class="item" data-value="c" style="">combined</div></div></div><span>connections / second.</span></div><div class="filter"><button class="ui compact icon button"><i class="add green icon"></i></button><div class="ui selection dropdown" id="addFilterType" tabindex="0"><input name="type" type="hidden"><i class="dropdown icon"></i><div class="default text">Filter Type</div><div class="menu" tabindex="-1"><div class="item" data-value="connections">connections</div><div class="item" data-value="env">env</div><div class="item" data-value="mask">mask</div><div class="item" data-value="port">port</div><div class="item" data-value="protocol">protocol</div><div class="item" data-value="role">role</div><div class="item" data-value="tags">tags</div><div class="item" data-value="target">target</div><div class="item" data-value="subnet">subnet</div></div></div></div><button class="ui compact icon button"><i class="refresh blue icon"></i>Apply Filter</button></div>
+  </div>
+<!--
+----------------- Pagination -----------------
+-->
+  <div class="ui three column grid">
+    <div class="row">
+      <div class="left floated left aligned column">
+        <button class="ui button disabled">prev</button>
+        Results: 1 to 10
+        <a href="/table?page=2"><button class="ui button">next</button></a>
+      </div>
+      <div class="left aligned column">
+        <div class="ui buttons">
+          <div id="btn_dl" class="ui button">Download CSV</div>
+            <div class="ui floating dropdown icon button" tabindex="0">
+              <i class="dropdown icon"></i>
+              <div class="menu" tabindex="-1">
+              <div class="item">Download Page (CSV)</div>
+              <div class="item">Download All (CSV)</div>
+            </div>
+          </div>
+        </div>
+      </div><div id="linkplace"></div>
+      <div class="right floated right aligned column">
+        Results per page:
+        <div class="ui floated right buttons pagesize">
+          <button class="ui button">10</button>
+          <button class="ui button">20</button>
+          <button class="ui button">50</button>
+          <button class="ui button">100</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--
+----------------- Table -----------------
+-->
+  <table class="ui selectable striped sortable small table" id="resultsTable">
+    <thead>
+      <tr>
+        <th id="header0" class="sorted ascending">Address</th>
+        <th id="header1">Hostname</th>
+        <th id="header2">Role (0 = client, 1 = server)</th>
+        <th id="header3">Environment</th>
+        <th id="header4">Tags</th>
+        <th id="header5">Bytes Handled</th>
+        <th id="header6">Packets Handled</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-content="21.0.0.0/8">
+        <td class="td_address">
+        <a href="./metadata#ip=21.0.0.0/8&amp;ds=ds1"><i class="tasks icon"></i>21.0.0.0/8</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        0.58 (mixed client/server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        303 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.0.0/16">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.0.0/16&amp;ds=ds1"><i class="tasks icon"></i>21.66.0.0/16</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        0.58 (mixed client/server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        303 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.10.0/24">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.10.0/24&amp;ds=ds1"><i class="tasks icon"></i>21.66.10.0/24</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        1.00 (server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        17 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.10.34/32">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.10.34/32&amp;ds=ds1"><i class="tasks icon"></i>21.66.10.34/32</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        1.00 (server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        0 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.10.70/32">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.10.70/32&amp;ds=ds1"><i class="tasks icon"></i>21.66.10.70/32</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        1.00 (server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        3 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.10.141/32">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.10.141/32&amp;ds=ds1"><i class="tasks icon"></i>21.66.10.141/32</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        1.00 (server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        0 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.10.193/32">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.10.193/32&amp;ds=ds1"><i class="tasks icon"></i>21.66.10.193/32</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        1.00 (server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        1 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.10.213/32">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.10.213/32&amp;ds=ds1"><i class="tasks icon"></i>21.66.10.213/32</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        1.00 (server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        9 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.10.231/32">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.10.231/32&amp;ds=ds1"><i class="tasks icon"></i>21.66.10.231/32</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        1.00 (server)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        0 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+      <tr data-content="21.66.36.0/24">
+        <td class="td_address">
+        <a href="./metadata#ip=21.66.36.0/24&amp;ds=ds1"><i class="tasks icon"></i>21.66.36.0/24</a>
+        </td>
+        <td class="td_alias">
+        <div class="ui transparent left icon input"><input data-content="" placeholder="-" value="" type="text"><i class="write icon"></i></div>
+        </td>
+        <td class="td_role">
+        0.00 (client)
+        </td>
+        <td class="td_environment">
+        production
+        </td>
+        <td class="td_tags">
+        </td>
+        <td class="td_bytes">
+        24 B/s
+        </td>
+        <td class="td_packets">
+        0 p/s
+        </td>
+      </tr>
+    </tbody>
+    <tfoot></tfoot>
+  </table>
+<!--
+----------------- Pagination -----------------
+-->
+  <div class="ui two column grid">
+    <div class="row">
+      <div class="left floated left aligned column">
+        <button class="ui button disabled">prev</button>
+        Results: 1 to 10
+        <a href="/table?page=2"><button class="ui button">next</button></a>
+      </div>
+      <div class="right floated right aligned column">
+        Results per page:
+        <div class="ui floated right buttons pagesize">
+          <button class="ui button">10</button>
+          <button class="ui button">20</button>
+          <button class="ui button">50</button>
+          <button class="ui button">100</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Demo data warning -->
+<div id="demo_msg" class="ui message transition hidden">
+  <i class="close icon"></i>
+  <div class="header">
+    Demonstration
+  </div>
+  <p>This is a subset of real network data, anonymized for privacy. The database is read-only and changes will not be saved.</p>
+</div>
+
+<!--
+----------------- Javascript transcription -----------------
+-->
+<script>
+  var g_known_tags = [];
+  var g_known_envs = [];
+  g_known_envs.push("production");
+  g_known_envs.push("inherit");
+  g_known_envs.push("dev");
+  var g_dses = {}
+  g_dses["default"] = "ds1";
+</script>
+
+<script type="text/javascript">
+window.onload = function () {
+    //enable header dropdown
+    $(document.getElementById("support_menu")).dropdown({
+      on: 'hover'
+    });
+
+    if (typeof(init) === "function") {
+        init();
+    }
+};
+</script>
+
+</body>
