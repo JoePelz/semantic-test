@@ -3,3 +3,4 @@
 *******************************/
 
 @stripedBackground: rgba(0, 0, 50, 0.05);
+@selectableBackground: rgba(0,0,50, 0.1);
